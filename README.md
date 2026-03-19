@@ -64,17 +64,10 @@ Neither Coursera nor Skillshare surfaces this. Making it visible changes the inc
 **3. Instructor dashboard: hints, not weights**  
 The roadmap includes a dashboard for course creators — but deliberately without exposing the exact weight of each factor. If instructors know rating = 40%, they optimise for rating, not for learners. And every rebalancing of weights feels like a rule change.
 
-The better version: actionable hints. *"63% of learners drop off before lesson 4 — review pacing in that section."* This is how Allegro handles seller scoring, and it works.
+The better version: actionable hints. *"63% of learners drop off before lesson 4 — review pacing in that section."* Actionable, not algorithmic.
 
 ---
 
-## Background
-
-My PM experience is in internal tooling — 3.5 years at Allegro (Trust & Safety and Fraud operations) and co-founder of a pre-seed mobile app where I owned the full product lifecycle from zero.
-
-The anti-gaming approach to the ranking algorithm and the instructor dashboard direction both draw directly from lessons learned at Allegro about what happens when you expose too much scoring logic to the people being scored.
-
----
 
 ## Stack
 
