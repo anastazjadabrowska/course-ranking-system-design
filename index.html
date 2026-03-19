@@ -1,1201 +1,615 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Platform — Ranking Prototype</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #F5F2ED;
-    --surface: #FFFFFF;
-    --surface2: #EEEAE3;
-    --ink: #1A1714;
-    --ink-muted: #6B6560;
-    --accent: #C84B2F;
-    --accent-light: #F5DDD8;
-    --accent2: #2F6BC8;
-    --border: #D9D4CB;
-    --tag-bg: #E8E3DC;
-    --gold: #D4A847;
-    --green: #2D7D52;
-    --green-light: #D6EDE2;
-    --radius: 10px;
-    --shadow: 0 2px 12px rgba(26,23,20,0.08);
-    --shadow-hover: 0 8px 32px rgba(26,23,20,0.14);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Ranking System — Nastka Dąbrowska</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0f0e0c;
+      --ink-mid: #3a3835;
+      --ink-muted: #8a8680;
+      --bg: #f7f5f0;
+      --bg-card: #ffffff;
+      --accent: #c84b1f;
+      --accent-light: #f5ede8;
+      --green: #1e6b3c;
+      --green-light: #e8f3ed;
+      --border: #e2ddd6;
+      --mono: 'DM Mono', monospace;
+    }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    min-height: 100vh;
-  }
+    html { scroll-behavior: smooth; }
 
-  /* TOP NAV */
-  nav {
-    background: var(--ink);
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-logo {
-    font-family: 'DM Serif Display', serif;
-    color: #fff;
-    font-size: 20px;
-    letter-spacing: -0.3px;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 24px; align-items: center; }
-  .nav-link {
-    background: none;
-    border: none;
-    font-family: 'DM Sans', sans-serif;
-    color: rgba(255,255,255,0.6);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.2s;
-  }
-  .nav-link.active { color: #fff; }
-  .nav-link:hover { color: #fff; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+    }
 
-  /* CATEGORY BAR */
-  .category-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 40px;
-    display: flex;
-    gap: 4px;
-    overflow-x: auto;
-  }
-  .cat-btn {
-    padding: 14px 18px;
-    border: none;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all 0.2s;
-  }
-  .cat-btn:hover { color: var(--ink); }
-  .cat-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
 
-  /* PAGE LAYOUT */
-  .page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 40px;
-  }
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  .page-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-  .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--ink);
-  }
-  .result-count {
-    font-size: 13px;
-    color: var(--ink-muted);
-  }
+    .header-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--ink);
+      text-decoration: none;
+    }
 
-  /* MAIN LAYOUT */
-  .page-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 32px;
-    align-items: start;
-  }
+    .header-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
 
-  /* SIDEBAR */
-  .sidebar {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    position: sticky;
-    top: 80px;
-  }
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  .sidebar-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-  }
-  .sidebar-clear {
-    font-size: 12px;
-    color: var(--accent);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-  }
-  .sidebar-clear:hover { text-decoration: underline; }
+    .header-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-mid);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
 
-  .filter-section {
-    padding: 18px 0;
-    border-top: 1px solid var(--border);
-  }
-  .filter-section-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
+    .header-links a:hover { color: var(--accent); }
 
-  /* Rating filter rows */
-  .rating-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.15s;
-    margin-bottom: 2px;
-  }
-  .rating-row:hover { background: var(--surface2); }
-  .rating-row.active { background: var(--green-light); }
-  .rating-stars { display: flex; gap: 2px; align-items: center; }
-  .star { color: var(--gold); font-size: 13px; }
-  .star.empty { color: var(--border); }
-  .rating-label { font-size: 13px; color: var(--ink); margin-left: 8px; }
-  .rating-count { font-size: 12px; color: var(--ink-muted); }
-  .rating-row.active .rating-label { color: var(--green); font-weight: 600; }
+    .header-links .cta {
+      background: var(--ink);
+      color: var(--bg) !important;
+      padding: 0.45rem 1rem;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
 
-  /* Checkbox filter */
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 0;
-    cursor: pointer;
-  }
-  .checkbox-row input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    accent-color: var(--accent);
-  }
-  .checkbox-label { font-size: 13px; color: var(--ink); }
+    .header-links .cta:hover { background: var(--accent) !important; }
 
-  /* Duration slider */
-  .slider-wrap { padding: 4px 0 8px; }
-  .slider-track {
-    width: 100%;
-    height: 4px;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 4px;
-    background: linear-gradient(to right, var(--green) 0%, var(--green) 100%);
-    outline: none;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .slider-track::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 2px solid var(--green);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-    cursor: pointer;
-  }
-  .slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--ink-muted);
-  }
-  .slider-value {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--green);
-    margin-top: 4px;
-  }
+    /* ── HERO ── */
+    .hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* Price chips in sidebar */
-  .price-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-  .price-chip {
-    padding: 6px 16px;
-    border-radius: 100px;
-    border: 1.5px solid var(--border);
-    font-size: 12px;
-    font-weight: 500;
-    background: var(--surface);
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .price-chip:hover { border-color: var(--accent); color: var(--accent); }
-  .price-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-  /* MAIN CONTENT AREA */
-  .main-content { min-width: 0; }
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
 
-  .top-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .search-box {
-    flex: 1;
-    min-width: 200px;
-    position: relative;
-  }
-  .search-box input {
-    width: 100%;
-    padding: 10px 16px 10px 38px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    background: var(--surface);
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .search-box input:focus { border-color: var(--accent); }
-  .search-box::before {
-    content: "⌕";
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: var(--ink-muted);
-    pointer-events: none;
-  }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
 
-  /* CONTROLS ROW (old — hidden) */
-  .controls-row { display: none; }
-  .divider { display: none; }
-  .filter-group { display: none; }
-  .filter-chip { display: none; }
-  .filter-label { display: none; }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
 
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--ink-mid);
+      max-width: 580px;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
 
-  /* SORT ROW */
-  .sort-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .sort-options { display: flex; gap: 6px; align-items: center; }
-  .sort-label { font-size: 12px; color: var(--ink-muted); font-weight: 500; margin-right: 4px; }
-  .sort-btn {
-    padding: 6px 14px;
-    border-radius: 100px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .sort-btn:hover { border-color: var(--ink); color: var(--ink); }
-  .sort-btn.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: white;
-  }
+    .hero-meta {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+    }
 
-  .view-toggle { display: flex; gap: 4px; }
-  .view-btn {
-    width: 34px; height: 34px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: var(--ink-muted);
-    transition: all 0.2s;
-  }
-  .view-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+    /* ── DELIVERABLES ── */
+    .deliverables {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* ACTIVE FILTERS STRIP */
-  .active-filters {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .active-filter-tag {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px 5px 12px;
-    background: var(--accent-light);
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--accent);
-  }
-  .active-filter-tag button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--accent);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  .active-filter-tag button:hover { opacity: 1; }
-  .clear-all {
-    font-size: 12px;
-    color: var(--ink-muted);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-  }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1.5rem;
+    }
 
-  /* COURSE CARDS */
-  .courses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-  }
+    .deliverable-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
 
-  .course-card {
-    background: var(--surface);
-    border-radius: 14px;
-    border: 1.5px solid var(--border);
-    overflow: hidden;
-    transition: all 0.25s;
-    cursor: pointer;
-    position: relative;
-    animation: fadeIn 0.35s ease forwards;
-    opacity: 0;
-  }
-  .course-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-2px);
-    border-color: transparent;
-  }
+    .deliverable-card {
+      background: var(--bg-card);
+      padding: 1.8rem 1.6rem;
+      text-decoration: none;
+      color: var(--ink);
+      display: block;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .deliverable-card::after {
+      content: '↗';
+      position: absolute;
+      top: 1.2rem;
+      right: 1.4rem;
+      font-size: 1rem;
+      color: var(--border);
+      transition: color 0.2s, transform 0.2s;
+    }
 
-  .card-thumb {
-    height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card-rank-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: white;
-  }
-  .rank-1 { background: var(--gold); }
-  .rank-2 { background: #9E9E9E; }
-  .rank-3 { background: #A0673A; }
-  .rank-other { background: rgba(0,0,0,0.45); font-size: 10px; }
+    .deliverable-card:hover { background: var(--accent-light); }
+    .deliverable-card:hover::after { color: var(--accent); transform: translate(2px, -2px); }
 
-  .badge-trending {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 4px 10px;
-    background: var(--accent);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .badge-new {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 4px 10px;
-    background: var(--green);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+    .deliverable-icon {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
 
-  .card-body { padding: 18px 20px 20px; }
+    .deliverable-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
 
-  .card-meta-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-  .card-category {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
-  }
-  .card-level {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 100px;
-    font-weight: 500;
-  }
-  .level-beginner { background: var(--green-light); color: var(--green); }
-  .level-intermediate { background: #FFF3D6; color: #A07000; }
-  .level-advanced { background: var(--accent-light); color: var(--accent); }
+    .deliverable-desc {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
 
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-    line-height: 1.35;
-    margin-bottom: 6px;
-    color: var(--ink);
-  }
-  .card-instructor {
-    font-size: 12px;
-    color: var(--ink-muted);
-    margin-bottom: 12px;
-  }
+    /* ── CONTENT SECTIONS ── */
+    .content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
 
-  .card-rating {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .stars { color: var(--gold); font-size: 13px; letter-spacing: 1px; }
-  .rating-value { font-size: 13px; font-weight: 700; color: var(--ink); }
-  .rating-count { font-size: 12px; color: var(--ink-muted); }
+    .section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
 
-  .card-score-bar {
-    margin-bottom: 14px;
-  }
-  .score-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    color: var(--ink-muted);
-    margin-bottom: 5px;
-  }
-  .score-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-  .score-badge.top-rated    { background: #e6f4ea; color: #1e7e34; }
-  .score-badge.highly-rated { background: #e8f0fe; color: #1a56db; }
-  .score-badge.well-rated   { background: #f1f3f4; color: #5f6368; }
-  .score-track {
-    height: 5px;
-    background: var(--surface2);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .score-fill {
-    height: 100%;
-    border-radius: 10px;
-    background: linear-gradient(90deg, var(--accent2), var(--accent));
-    transition: width 0.6s ease;
-  }
+    .section:last-child { border-bottom: none; }
 
-  .card-stats {
-    display: flex;
-    gap: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
-  .card-stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--ink-muted);
-  }
-  .stat-icon { font-size: 13px; }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.9rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
 
-  /* SITE FOOTER */
-  .site-footer {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    margin-top: 48px;
-    padding: 32px 0 24px;
-  }
-  .footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .footer-links {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .footer-link {
-    background: none;
-    border: none;
-    padding: 0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    color: var(--ink-muted);
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .footer-link:hover { color: var(--ink); text-decoration: underline; }
-  .footer-link--highlight { color: var(--accent2); font-weight: 600; }
-  .footer-note {
-    font-size: 11px;
-    color: var(--ink-muted);
-    line-height: 1.6;
-    max-width: 760px;
-  }
+    p {
+      color: var(--ink-mid);
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+    }
 
-  /* TOOLTIP ANNOTATION */
-  .annotation {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    color: var(--accent2);
-    font-weight: 500;
-    cursor: help;
-    position: relative;
-  }
-  .annotation::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--ink);
-    color: white;
-    font-size: 11px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 10;
-  }
-  .annotation:hover::after { opacity: 1; }
+    /* ── PROBLEM CARDS ── */
+    .problem-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin: 2rem 0;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
 
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--ink-muted);
-  }
-  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+    .problem-item {
+      background: var(--bg-card);
+      padding: 1.4rem 1.6rem;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
 
-  /* PAGINATION */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 32px;
-  }
-  .page-btn {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: var(--ink-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  .page-btn:hover { border-color: var(--ink); color: var(--ink); }
-  .page-btn.active { background: var(--ink); border-color: var(--ink); color: white; }
+    .problem-platform {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-top: 0.2rem;
+    }
 
-  .hidden { display: none !important; }
-</style>
+    .problem-text {
+      font-size: 0.92rem;
+      color: var(--ink-mid);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .problem-text strong { color: var(--ink); font-weight: 500; }
+
+    /* ── ALGORITHM TABLE ── */
+    .algo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+    }
+
+    .algo-table thead tr {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .algo-table th {
+      text-align: left;
+      padding: 0.9rem 1.2rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .algo-table td {
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .algo-table tr:last-child td { border-bottom: none; }
+    .algo-table tr:nth-child(even) td { background: #faf9f7; }
+
+    .weight-badge {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--accent-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .signal-name {
+      font-weight: 500;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .signal-why {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      font-weight: 300;
+    }
+
+    /* ── LABEL DEMO ── */
+    .label-demo {
+      display: flex;
+      gap: 0.8rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .label {
+      padding: 0.4rem 0.9rem;
+      border-radius: 2px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .label-top { background: var(--green-light); color: var(--green); }
+    .label-high { background: #e8f0fe; color: #1a56db; }
+    .label-well { background: #f1f3f4; color: #5f6368; }
+
+    /* ── DECISIONS ── */
+    .decisions {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .decision {
+      background: var(--bg-card);
+      padding: 2rem 1.8rem;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1.5rem;
+    }
+
+    .decision-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--border);
+      line-height: 1;
+      padding-top: 0.1rem;
+    }
+
+    .decision-title {
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: var(--ink);
+    }
+
+    .decision-body {
+      font-size: 0.9rem;
+      color: var(--ink-mid);
+      line-height: 1.65;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .decision-body em {
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    /* ── STACK ── */
+    .stack-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .stack-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero > * {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero > *:nth-child(3) { animation-delay: 0.25s; }
+    .hero > *:nth-child(4) { animation-delay: 0.35s; }
+
+    @media (max-width: 640px) {
+      .deliverable-grid { grid-template-columns: 1fr; }
+      .problem-item { grid-template-columns: 1fr; gap: 0.4rem; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Learn<span>.</span>io</div>
-  <div class="nav-links">
-    <button class="nav-link">Explore</button>
-    <button class="nav-link active">Courses</button>
-    <button class="nav-link">My Learning</button>
-    <button class="nav-link">Instructors</button>
+<header>
+  <div class="header-inner">
+    <a href="#" class="header-name">Nastka Dąbrowska</a>
+    <nav class="header-links">
+      <a href="https://www.linkedin.com/in/anastazja-dabrowska" target="_blank">LinkedIn</a>
+      <a href="https://anastazjadabrowska.github.io/course-ranking-system-design/" target="_blank" class="cta">Open Prototype →</a>
+    </nav>
   </div>
-</nav>
+</header>
 
-<!-- CATEGORY BAR -->
-<div class="category-bar">
-  <button class="cat-btn" onclick="selectCategory(this, 'All')">All Categories</button>
-  <button class="cat-btn active" onclick="selectCategory(this, 'Development')">💻 Development</button>
-  <button class="cat-btn" onclick="selectCategory(this, 'Data Science')">📊 Data Science</button>
-  <button class="cat-btn" onclick="selectCategory(this, 'Design')">🎨 Design</button>
-  <button class="cat-btn" onclick="selectCategory(this, 'Business')">💼 Business</button>
-  <button class="cat-btn" onclick="selectCategory(this, 'Marketing')">📣 Marketing</button>
-  <button class="cat-btn" onclick="selectCategory(this, 'AI & ML')">🤖 AI & ML</button>
-</div>
-
-<div class="page">
-  <div class="page-header">
-    <h1 class="page-title">Development</h1>
-    <span class="result-count" id="result-count">6 courses</span>
+<main>
+  <div class="hero">
+    <div class="hero-tag">Product Design Case Study</div>
+    <h1>Course Ranking<br><em>System Design</em></h1>
+    <p class="hero-sub">How should a multi-category learning platform decide which courses surface first — and how much control should users have over that order?</p>
+    <p class="hero-meta">Nastka Dąbrowska · Product Manager · March 2026 · Completed independently in ~2 days</p>
   </div>
 
-  <!-- TOP BAR: search + sort -->
-  <div class="top-bar">
-    <div class="search-box">
-      <input type="text" placeholder="Search within Development..." id="search-input" oninput="applyFilters()">
+  <div class="deliverables">
+    <div class="section-label">Deliverables</div>
+    <div class="deliverable-grid">
+      <a class="deliverable-card" href="./course_ranking_algorithm.docx">
+        <span class="deliverable-icon">📄</span>
+        <div class="deliverable-title">Product Design Document</div>
+        <div class="deliverable-desc">Algorithm design, competitive audit, three key decisions explained</div>
+      </a>
+      <a class="deliverable-card" href="https://anastazjadabrowska.github.io/course-ranking-system-design/" target="_blank">
+        <span class="deliverable-icon">🖥️</span>
+        <div class="deliverable-title">Interactive Prototype</div>
+        <div class="deliverable-desc">Lo-fi desktop UI — working filters, sort modes, quality labels</div>
+      </a>
+      <a class="deliverable-card" href="https://www.loom.com/share/8b05401c1f384407957f323b0916bc0b" target="_blank">
+        <span class="deliverable-icon">🎥</span>
+        <div class="deliverable-title">Loom Walkthrough</div>
+        <div class="deliverable-desc">~2 min video walkthrough of the prototype and key decisions</div>
+      </a>
     </div>
   </div>
 
-  <!-- ACTIVE FILTERS STRIP -->
-  <div class="active-filters" id="active-filters"></div>
+  <div class="content">
 
-  <div class="page-layout">
-
-    <!-- SIDEBAR FILTERS -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <span class="sidebar-title">Filters</span>
-        <button class="sidebar-clear" onclick="clearAll()">Clear all</button>
-      </div>
-
-      <!-- Rating -->
-      <div class="filter-section">
-        <div class="filter-section-title">Minimum Rating</div>
-        <div class="rating-row" onclick="setRating(this, 4.5)">
-          <div class="rating-stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            <span class="rating-label">4.5 & up</span>
+    <section class="section">
+      <div class="section-label">The Problem</div>
+      <h2>Both major platforms treat ranking as a black box</h2>
+      <p>Before designing anything, I audited how Coursera and Skillshare handle course discovery today — specifically what they expose to users and where that breaks down.</p>
+      <div class="problem-list">
+        <div class="problem-item">
+          <div class="problem-platform">Coursera</div>
+          <div class="problem-text">
+            <strong>Sort was missing entirely</strong> from search results. Users could filter, but had no way to reorder what they got. When filters were applied, nothing on screen confirmed it — filters activated silently.
           </div>
-          <span class="rating-count" id="count-4.5">–</span>
         </div>
-        <div class="rating-row" onclick="setRating(this, 4.0)">
-          <div class="rating-stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
-            <span class="rating-label">4.0 & up</span>
+        <div class="problem-item">
+          <div class="problem-platform">Skillshare</div>
+          <div class="problem-text">
+            <strong>Ratings hidden on listing cards</strong> — only visible after clicking into a course. With 30,000+ courses and no ratings on the listing page, there's no way to tell a great course from a mediocre one without clicking through each one.
           </div>
-          <span class="rating-count" id="count-4">–</span>
         </div>
-        <div class="rating-row" onclick="setRating(this, 3.5)">
-          <div class="rating-stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
-            <span class="rating-label">3.5 & up</span>
+        <div class="problem-item">
+          <div class="problem-platform">Both</div>
+          <div class="problem-text">
+            <strong>Filter state invisible.</strong> Users paid the price: wasted time on low-quality content, genuinely good courses staying buried.
           </div>
-          <span class="rating-count" id="count-3.5">–</span>
         </div>
-        <div class="rating-row active" onclick="setRating(this, 0)">
-          <div class="rating-stars">
-            <span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span><span class="star empty">★</span><span class="star empty">★</span>
-            <span class="rating-label">Any rating</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-label">The Algorithm</div>
+      <h2>A composite score from five signals</h2>
+      <p>Each course receives a Ranking Score — a weighted combination of five signals, each scored 0–100. The score drives ordering and determines which quality label the course receives.</p>
+
+      <table class="algo-table">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Weight</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="signal-name">User Rating</span><span class="signal-why">Volume-weighted star average</span></td>
+            <td><span class="weight-badge">40%</span></td>
+            <td class="signal-why">Prevents gaming by small review sets — a course with 3 five-star reviews shouldn't outrank one with 3,000 four-star reviews.</td>
+          </tr>
+          <tr>
+            <td><span class="signal-name">Completion Rate</span><span class="signal-why">% of learners who finish</span></td>
+            <td><span class="weight-badge">25%</span></td>
+            <td class="signal-why">Hardest signal to fake — users vote with their time, not just their stars.</td>
+          </tr>
+          <tr>
+            <td><span class="signal-name">Popularity</span><span class="signal-why">Enrollments + recent growth</span></td>
+            <td><span class="weight-badge">20%</span></td>
+            <td class="signal-why">Scaled enrollment — older courses don't permanently dominate the top.</td>
+          </tr>
+          <tr>
+            <td><span class="signal-name">Content Freshness</span><span class="signal-why">Date last updated</span></td>
+            <td><span class="weight-badge">10%</span></td>
+            <td class="signal-why">Critical in fast-moving fields like AI and cloud infrastructure.</td>
+          </tr>
+          <tr>
+            <td><span class="signal-name">Community Activity</span><span class="signal-why">Q&A, instructor responsiveness</span></td>
+            <td><span class="weight-badge">5%</span></td>
+            <td class="signal-why">Lowest weight — easiest to game. But signals whether the course is alive and well-supported.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Each course receives one of three quality labels — displayed next to the star rating on every card:</p>
+      <div class="label-demo">
+        <span class="label label-top">★ Top Rated</span>
+        <span class="label label-high">✦ Highly Rated</span>
+        <span class="label label-well">· Well Rated</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-label">Key Decisions</div>
+      <h2>Three choices worth explaining</h2>
+      <div class="decisions">
+        <div class="decision">
+          <div class="decision-num">1</div>
+          <div>
+            <div class="decision-title">Label over number</div>
+            <p class="decision-body">An earlier version showed a raw score (0–100) on every card. Scrapped it. A learner glancing at a card can act on <em>"Top Rated"</em> — they can't meaningfully act on 73.4 vs 71.2. The underlying score still drives ranking; the label makes that signal human-readable without adding noise.</p>
           </div>
-          <span class="rating-count" id="count-0">6</span>
+        </div>
+        <div class="decision">
+          <div class="decision-num">2</div>
+          <div>
+            <div class="decision-title">Completion rate visible and sortable</div>
+            <p class="decision-body">Neither Coursera nor Skillshare surfaces completion rate to users. Making it visible changes the incentive structure: instructors are rewarded for building courses people actually finish, not just enroll in.</p>
+          </div>
+        </div>
+        <div class="decision">
+          <div class="decision-num">3</div>
+          <div>
+            <div class="decision-title">Instructor dashboard: hints, not weights</div>
+            <p class="decision-body">The roadmap includes a dashboard for course creators — but deliberately without exposing the exact weight of each factor. If instructors know rating = 40%, they optimise for rating, not for learners. And every rebalancing of weights feels like a rule change they weren't warned about. The better version: actionable hints. <em>"63% of learners drop off before lesson 4 — review pacing in that section."</em> Actionable, not algorithmic.</p>
+          </div>
         </div>
       </div>
+    </section>
 
-      <!-- Level -->
-      <div class="filter-section">
-        <div class="filter-section-title">Level</div>
-        <label class="checkbox-row">
-          <input type="checkbox" id="level-beginner" onchange="applyFilters()">
-          <span class="checkbox-label">Beginner</span>
-        </label>
-        <label class="checkbox-row">
-          <input type="checkbox" id="level-intermediate" onchange="applyFilters()">
-          <span class="checkbox-label">Intermediate</span>
-        </label>
-        <label class="checkbox-row">
-          <input type="checkbox" id="level-advanced" onchange="applyFilters()">
-          <span class="checkbox-label">Advanced</span>
-        </label>
-      </div>
 
-      <!-- Duration slider -->
-      <div class="filter-section">
-        <div class="filter-section-title">Max Duration</div>
-        <div class="slider-wrap">
-          <input type="range" class="slider-track" id="duration-slider" min="1" max="40" value="40" oninput="updateSlider(this)">
-          <div class="slider-labels"><span>1h</span><span>40h+</span></div>
-          <div class="slider-value" id="slider-label">Any duration</div>
-        </div>
-      </div>
 
-      <!-- Price -->
-      <div class="filter-section">
-        <div class="filter-section-title">Price</div>
-        <div class="price-chips">
-          <button class="price-chip active" onclick="setPriceChip(this, 'all')">All</button>
-          <button class="price-chip" onclick="setPriceChip(this, 'free')">Free</button>
-          <button class="price-chip" onclick="setPriceChip(this, 'paid')">Paid</button>
-        </div>
-      </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-      <!-- SORT ROW -->
-      <div class="sort-row">
-        <div class="sort-options">
-          <span class="sort-label">Sort by:</span>
-          <button class="sort-btn active" onclick="setSort(this, 'score')">✦ Recommended</button>
-          <button class="sort-btn" onclick="setSort(this, 'rating')">★ Rating</button>
-          <button class="sort-btn" onclick="setSort(this, 'popularity')">🔥 Most Popular</button>
-          <button class="sort-btn" onclick="setSort(this, 'newest')">🆕 Newest</button>
-          <button class="sort-btn" onclick="setSort(this, 'completion')">✓ Completion Rate</button>
-        </div>
-        <div class="view-toggle">
-          <button class="view-btn active" onclick="setView(this, 'grid')" title="Grid view">⊞</button>
-          <button class="view-btn" onclick="setView(this, 'list')" title="List view">☰</button>
-        </div>
-      </div>
-
-      <!-- COURSES GRID -->
-      <div class="courses-grid" id="courses-grid"></div>
-
-      <!-- EMPTY STATE -->
-      <div class="empty-state hidden" id="empty-state">
-        <div class="icon">🔍</div>
-        <h3>No courses match your filters</h3>
-        <p>Try adjusting your search or clearing some filters.</p>
-      </div>
-
-      <!-- PAGINATION -->
-      <div class="pagination">
-        <button class="page-btn">‹</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">…</button>
-        <button class="page-btn">12</button>
-        <button class="page-btn">›</button>
-      </div>
-    </div>
-
-  </div><!-- end page-layout -->
-</div>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-links">
-      <button class="footer-link">Terms of Service</button>
-      <button class="footer-link">Privacy Policy</button>
-      <button class="footer-link">Cookie Settings</button>
-      <button class="footer-link footer-link--highlight">How Course Ranking Works</button>
-    </div>
-    <div class="footer-note">
-      © 2024 LearnHub. All rights reserved.
-    </div>
   </div>
+</main>
+
+<footer>
+  <p>Nastka Dąbrowska · Product Manager · <a href="https://www.linkedin.com/in/anastazja-dabrowska" target="_blank" style="color:var(--accent);text-decoration:none;">LinkedIn →</a></p>
 </footer>
 
-<script>
-const COURSES = [
-  {
-    id: 1, emoji: "🐍",
-    color: "linear-gradient(135deg, #1a4f6e 0%, #2d8a5e 100%)",
-    title: "Python for Data Engineers",
-    instructor: "Dr. Maya Patel",
-    category: "Development",
-    level: "Intermediate",
-    rating: 4.8,
-    reviews: 3421,
-    enrolled: 48200,
-    completionRate: 78,
-    hours: 22,
-    freshness: 92,
-    engagement: 88,
-    price: "paid",
-    trending: true,
-    isNew: false,
-    score: 91.4,
-  },
-  {
-    id: 2, emoji: "⚛️",
-    color: "linear-gradient(135deg, #1a2e5e 0%, #4a6fa5 100%)",
-    title: "React 18 — Complete Guide",
-    instructor: "Lena Kovač",
-    category: "Development",
-    level: "Beginner",
-    rating: 4.7,
-    reviews: 8950,
-    enrolled: 124000,
-    completionRate: 65,
-    hours: 31,
-    freshness: 85,
-    engagement: 95,
-    price: "paid",
-    trending: false,
-    isNew: false,
-    score: 89.2,
-  },
-  {
-    id: 3, emoji: "🦀",
-    color: "linear-gradient(135deg, #5e1a1a 0%, #c84b2f 100%)",
-    title: "Rust Systems Programming",
-    instructor: "Takeshi Mori",
-    category: "Development",
-    level: "Advanced",
-    rating: 4.9,
-    reviews: 892,
-    enrolled: 9800,
-    completionRate: 55,
-    hours: 40,
-    freshness: 78,
-    engagement: 82,
-    price: "paid",
-    trending: false,
-    isNew: false,
-    score: 86.1,
-  },
-  {
-    id: 4, emoji: "🐳",
-    color: "linear-gradient(135deg, #1a3a5e 0%, #2596be 100%)",
-    title: "Docker & Kubernetes in Practice",
-    instructor: "Sara el-Masri",
-    category: "Development",
-    level: "Intermediate",
-    rating: 4.6,
-    reviews: 2180,
-    enrolled: 31000,
-    completionRate: 70,
-    hours: 18,
-    freshness: 96,
-    engagement: 76,
-    price: "paid",
-    trending: false,
-    isNew: true,
-    score: 67.3,
-  },
-  {
-    id: 5, emoji: "🌐",
-    color: "linear-gradient(135deg, #1e1a5e 0%, #6b52c8 100%)",
-    title: "Full-Stack Web Dev Bootcamp",
-    instructor: "Chris Nguyen",
-    category: "Development",
-    level: "Beginner",
-    rating: 4.5,
-    reviews: 12400,
-    enrolled: 210000,
-    completionRate: 42,
-    hours: 55,
-    freshness: 70,
-    engagement: 90,
-    price: "free",
-    trending: false,
-    isNew: false,
-    score: 52.8,
-  },
-  {
-    id: 6, emoji: "🔐",
-    color: "linear-gradient(135deg, #1a3a1e 0%, #2d7d52 100%)",
-    title: "API Security & Authentication",
-    instructor: "Yuki Tanaka",
-    category: "Development",
-    level: "Advanced",
-    rating: 4.4,
-    reviews: 540,
-    enrolled: 7200,
-    completionRate: 82,
-    hours: 12,
-    freshness: 88,
-    engagement: 72,
-    price: "paid",
-    trending: false,
-    isNew: false,
-    score: 79.8,
-  },
-];
-
-let currentSort = 'score';
-let currentCategory = 'Development';
-let minRatingFilter = 0;
-let maxDuration = 40;
-let priceFilter = 'all';
-
-function starsHtml(rating) {
-  const full = Math.floor(rating);
-  const half = rating % 1 >= 0.5;
-  let s = '★'.repeat(full);
-  if (half) s += '½';
-  return s;
-}
-
-function rankBadge(rank) {
-  if (rank === 1) return `<div class="card-rank-badge rank-1">#1</div>`;
-  if (rank === 2) return `<div class="card-rank-badge rank-2">#2</div>`;
-  if (rank === 3) return `<div class="card-rank-badge rank-3">#3</div>`;
-  return `<div class="card-rank-badge rank-other">#${rank}</div>`;
-}
-
-function levelClass(l) {
-  if (l === 'Beginner') return 'level-beginner';
-  if (l === 'Intermediate') return 'level-intermediate';
-  return 'level-advanced';
-}
-
-function getSortedCourses(courses) {
-  const c = [...courses];
-  if (currentSort === 'score') c.sort((a,b) => b.score - a.score);
-  else if (currentSort === 'rating') c.sort((a,b) => b.rating - a.rating || b.reviews - a.reviews);
-  else if (currentSort === 'popularity') c.sort((a,b) => b.enrolled - a.enrolled);
-  else if (currentSort === 'newest') c.sort((a,b) => b.freshness - a.freshness);
-  else if (currentSort === 'completion') c.sort((a,b) => b.completionRate - a.completionRate);
-  return c;
-}
-
-function getSelectedLevels() {
-  const levels = [];
-  if (document.getElementById('level-beginner')?.checked) levels.push('Beginner');
-  if (document.getElementById('level-intermediate')?.checked) levels.push('Intermediate');
-  if (document.getElementById('level-advanced')?.checked) levels.push('Advanced');
-  return levels;
-}
-
-function applyFilters() {
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const selectedLevels = getSelectedLevels();
-
-  let filtered = COURSES.filter(c => {
-    if (currentCategory !== 'All' && c.category !== currentCategory) return false;
-    if (selectedLevels.length > 0 && !selectedLevels.includes(c.level)) return false;
-    if (search && !c.title.toLowerCase().includes(search) && !c.instructor.toLowerCase().includes(search)) return false;
-    if (c.rating < minRatingFilter) return false;
-    if (maxDuration < 40 && c.hours > maxDuration) return false;
-    if (priceFilter === 'free' && c.price !== 'free') return false;
-    if (priceFilter === 'paid' && c.price !== 'paid') return false;
-    return true;
-  });
-
-  const sorted = getSortedCourses(filtered);
-  renderCourses(sorted);
-  updateActiveFilters();
-  updateRatingCounts();
-  document.getElementById('result-count').textContent = `${sorted.length} course${sorted.length !== 1 ? 's' : ''}`;
-}
-
-function updateRatingCounts() {
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const selectedLevels = getSelectedLevels();
-  const thresholds = [0, 3.5, 4.0, 4.5];
-  thresholds.forEach(t => {
-    const count = COURSES.filter(c => {
-      if (currentCategory !== 'All' && c.category !== currentCategory) return false;
-      if (selectedLevels.length > 0 && !selectedLevels.includes(c.level)) return false;
-      if (search && !c.title.toLowerCase().includes(search)) return false;
-      if (priceFilter !== 'all' && c.price !== priceFilter) return false;
-      return c.rating >= t;
-    }).length;
-    const el = document.getElementById(`count-${t}`);
-    if (el) el.textContent = count;
-  });
-}
-
-function setRating(el, value) {
-  document.querySelectorAll('.rating-row').forEach(r => r.classList.remove('active'));
-  el.classList.add('active');
-  minRatingFilter = value;
-  applyFilters();
-}
-
-function updateSlider(input) {
-  maxDuration = parseInt(input.value);
-  const label = document.getElementById('slider-label');
-  label.textContent = maxDuration >= 40 ? 'Any duration' : `Up to ${maxDuration}h`;
-  const pct = ((maxDuration - 1) / 39) * 100;
-  input.style.background = `linear-gradient(to right, var(--green) ${pct}%, var(--surface2) ${pct}%)`;
-  applyFilters();
-}
-
-function setPriceChip(el, value) {
-  document.querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  priceFilter = value;
-  applyFilters();
-}
-
-function renderCourses(courses) {
-  const grid = document.getElementById('courses-grid');
-  const empty = document.getElementById('empty-state');
-
-  if (courses.length === 0) {
-    grid.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-
-  grid.innerHTML = courses.map((c, i) => `
-    <div class="course-card" style="animation-delay: ${i * 0.07}s">
-      <div class="card-thumb" style="background: ${c.color}">
-        <span>${c.emoji}</span>
-        ${rankBadge(i + 1)}
-        ${c.trending ? '<div class="badge-trending">🔥 Trending</div>' : ''}
-        ${c.isNew ? '<div class="badge-new">✦ New</div>' : ''}
-      </div>
-      <div class="card-body">
-        <div class="card-meta-top">
-          <span class="card-category">${c.category}</span>
-          <span class="card-level ${levelClass(c.level)}">${c.level}</span>
-        </div>
-        <div class="card-title">${c.title}</div>
-        <div class="card-instructor">by ${c.instructor}</div>
-        <div class="card-rating">
-          <span class="stars">${starsHtml(c.rating)}</span>
-          <span class="rating-value">${c.rating.toFixed(1)}</span>
-          <span class="rating-count">(${c.reviews.toLocaleString()} reviews)</span>
-          <span class="score-badge ${c.score >= 80 ? 'top-rated' : c.score >= 60 ? 'highly-rated' : 'well-rated'}">${c.score >= 80 ? '★ Top Rated' : c.score >= 60 ? '✦ Highly Rated' : '· Well Rated'}</span>
-        </div>
-        <div class="card-stats">
-          <div class="card-stat"><span class="stat-icon">👥</span>${(c.enrolled/1000).toFixed(0)}k enrolled</div>
-          <div class="card-stat"><span class="stat-icon">✓</span>${c.completionRate}% complete</div>
-          <div class="card-stat"><span class="stat-icon">⏱</span>${c.hours}h</div>
-          <div class="card-stat"><span class="stat-icon">${c.price === 'free' ? '🆓' : '💳'}</span>${c.price === 'free' ? 'Free' : 'Paid'}</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function updateActiveFilters() {
-  const container = document.getElementById('active-filters');
-  const tags = [];
-  const search = document.getElementById('search-input').value;
-  const selectedLevels = getSelectedLevels();
-
-  if (selectedLevels.length > 0) tags.push({ label: `Level: ${selectedLevels.join(', ')}`, clear: () => {
-    ['level-beginner','level-intermediate','level-advanced'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-    applyFilters();
-  }});
-  if (minRatingFilter > 0) tags.push({ label: `Rating: ${minRatingFilter}+`, clear: () => { setRating(document.querySelector('.rating-row'), 0); } });
-  if (maxDuration < 40) tags.push({ label: `Duration: ≤${maxDuration}h`, clear: () => { const s = document.getElementById('duration-slider'); s.value = 40; updateSlider(s); } });
-  if (priceFilter !== 'all') tags.push({ label: `Price: ${priceFilter}`, clear: () => { setPriceChip(document.querySelector('.price-chip'), 'all'); } });
-  if (search) tags.push({ label: `"${search}"`, clear: () => { document.getElementById('search-input').value = ''; applyFilters(); } });
-
-  if (tags.length === 0) { container.innerHTML = ''; return; }
-
-  container.innerHTML = tags.map((t, i) => `
-    <div class="active-filter-tag">
-      ${t.label}
-      <button onclick="clearFilter(${i})">×</button>
-    </div>
-  `).join('') + (tags.length > 1 ? `<button class="clear-all" onclick="clearAll()">Clear all</button>` : '');
-
-  window._filterClearFns = tags.map(t => t.clear);
-}
-
-function clearFilter(i) { window._filterClearFns[i](); }
-
-function clearAll() {
-  minRatingFilter = 0;
-  maxDuration = 40;
-  priceFilter = 'all';
-  document.getElementById('search-input').value = '';
-  const slider = document.getElementById('duration-slider');
-  if (slider) { slider.value = 40; slider.style.background = ''; document.getElementById('slider-label').textContent = 'Any duration'; }
-  ['level-beginner','level-intermediate','level-advanced'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-  document.querySelectorAll('.rating-row').forEach((r, i) => r.classList.toggle('active', i === 0));
-  document.querySelectorAll('.price-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
-  applyFilters();
-}
-
-function setSort(el, sort) {
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  currentSort = sort;
-  applyFilters();
-}
-
-function setView(el, view) {
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  const grid = document.getElementById('courses-grid');
-  grid.style.gridTemplateColumns = view === 'list' ? '1fr' : '';
-}
-
-function selectCategory(el, cat) {
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  currentCategory = cat;
-  document.querySelector('.page-title').textContent = cat === 'All' ? 'All Categories' : cat;
-  applyFilters();
-}
-
-// Init
-applyFilters();
-updateRatingCounts();
-
-
-</script>
 </body>
 </html>
