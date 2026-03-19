@@ -19,7 +19,7 @@ The brief was open-ended — define the principles, identify the contributing fa
 
 | | |
 |---|---|
-| 📄 [Product Design Document](./course-ranking-document.html) | Algorithm design, competitive audit, three key decisions explained |
+| 📄 [Product Design Document](https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-document.html) | Algorithm design, competitive audit, three key decisions explained |
 | 🖥️ [Interactive Prototype](https://anastazjadabrowska.github.io/course-ranking-system-design/) | Lo-fi desktop UI — working filters, sort modes, quality labels |
 | 🎥 [Loom Walkthrough](https://www.loom.com/share/8b05401c1f384407957f323b0916bc0b) | ~2 min video walkthrough |
 
