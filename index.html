@@ -461,7 +461,7 @@
   <div class="header-inner">
     <a href="#" class="header-name">Nastka Dąbrowska</a>
     <nav class="header-links">
-      <a href="https://www.linkedin.com/in/anastazja-dabrowska" target="_blank">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/anastazjadabrowska/" target="_blank">LinkedIn</a>
       <a href="https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-prototype.html" target="_blank" class="cta">Open Prototype →</a>
     </nav>
   </div>
@@ -478,7 +478,7 @@
   <div class="deliverables">
     <div class="section-label">Deliverables</div>
     <div class="deliverable-grid">
-      <a class="deliverable-card" href="./course_ranking_algorithm.docx">
+      <a class="deliverable-card" href="https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-document.html" target="_blank">
         <span class="deliverable-icon">📄</span>
         <div class="deliverable-title">Product Design Document</div>
         <div class="deliverable-desc">Algorithm design, competitive audit, three key decisions explained</div>
@@ -498,109 +498,9 @@
 
   <div class="content">
 
-    <section class="section">
-      <div class="section-label">The Problem</div>
-      <h2>Both major platforms treat ranking as a black box</h2>
-      <p>Before designing anything, I audited how Coursera and Skillshare handle course discovery today — specifically what they expose to users and where that breaks down.</p>
-      <div class="problem-list">
-        <div class="problem-item">
-          <div class="problem-platform">Coursera</div>
-          <div class="problem-text">
-            <strong>Sort was missing entirely</strong> from search results. Users could filter, but had no way to reorder what they got. When filters were applied, nothing on screen confirmed it — filters activated silently.
-          </div>
-        </div>
-        <div class="problem-item">
-          <div class="problem-platform">Skillshare</div>
-          <div class="problem-text">
-            <strong>Ratings hidden on listing cards</strong> — only visible after clicking into a course. With 30,000+ courses and no ratings on the listing page, there's no way to tell a great course from a mediocre one without clicking through each one.
-          </div>
-        </div>
-        <div class="problem-item">
-          <div class="problem-platform">Both</div>
-          <div class="problem-text">
-            <strong>Filter state invisible.</strong> Users paid the price: wasted time on low-quality content, genuinely good courses staying buried.
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="section">
-      <div class="section-label">The Algorithm</div>
-      <h2>A composite score from five signals</h2>
-      <p>Each course receives a Ranking Score — a weighted combination of five signals, each scored 0–100. The score drives ordering and determines which quality label the course receives.</p>
 
-      <table class="algo-table">
-        <thead>
-          <tr>
-            <th>Signal</th>
-            <th>Weight</th>
-            <th>Why</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="signal-name">User Rating</span><span class="signal-why">Volume-weighted star average</span></td>
-            <td><span class="weight-badge">40%</span></td>
-            <td class="signal-why">Prevents gaming by small review sets — a course with 3 five-star reviews shouldn't outrank one with 3,000 four-star reviews.</td>
-          </tr>
-          <tr>
-            <td><span class="signal-name">Completion Rate</span><span class="signal-why">% of learners who finish</span></td>
-            <td><span class="weight-badge">25%</span></td>
-            <td class="signal-why">Hardest signal to fake — users vote with their time, not just their stars.</td>
-          </tr>
-          <tr>
-            <td><span class="signal-name">Popularity</span><span class="signal-why">Enrollments + recent growth</span></td>
-            <td><span class="weight-badge">20%</span></td>
-            <td class="signal-why">Scaled enrollment — older courses don't permanently dominate the top.</td>
-          </tr>
-          <tr>
-            <td><span class="signal-name">Content Freshness</span><span class="signal-why">Date last updated</span></td>
-            <td><span class="weight-badge">10%</span></td>
-            <td class="signal-why">Critical in fast-moving fields like AI and cloud infrastructure.</td>
-          </tr>
-          <tr>
-            <td><span class="signal-name">Community Activity</span><span class="signal-why">Q&A, instructor responsiveness</span></td>
-            <td><span class="weight-badge">5%</span></td>
-            <td class="signal-why">Lowest weight — easiest to game. But signals whether the course is alive and well-supported.</td>
-          </tr>
-        </tbody>
-      </table>
 
-      <p>Each course receives one of three quality labels — displayed next to the star rating on every card:</p>
-      <div class="label-demo">
-        <span class="label label-top">★ Top Rated</span>
-        <span class="label label-high">✦ Highly Rated</span>
-        <span class="label label-well">· Well Rated</span>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-label">Key Decisions</div>
-      <h2>Three choices worth explaining</h2>
-      <div class="decisions">
-        <div class="decision">
-          <div class="decision-num">1</div>
-          <div>
-            <div class="decision-title">Label over number</div>
-            <p class="decision-body">An earlier version showed a raw score (0–100) on every card. Scrapped it. A learner glancing at a card can act on <em>"Top Rated"</em> — they can't meaningfully act on 73.4 vs 71.2. The underlying score still drives ranking; the label makes that signal human-readable without adding noise.</p>
-          </div>
-        </div>
-        <div class="decision">
-          <div class="decision-num">2</div>
-          <div>
-            <div class="decision-title">Completion rate visible and sortable</div>
-            <p class="decision-body">Neither Coursera nor Skillshare surfaces completion rate to users. Making it visible changes the incentive structure: instructors are rewarded for building courses people actually finish, not just enroll in.</p>
-          </div>
-        </div>
-        <div class="decision">
-          <div class="decision-num">3</div>
-          <div>
-            <div class="decision-title">Instructor dashboard: hints, not weights</div>
-            <p class="decision-body">The roadmap includes a dashboard for course creators — but deliberately without exposing the exact weight of each factor. If instructors know rating = 40%, they optimise for rating, not for learners. And every rebalancing of weights feels like a rule change they weren't warned about. The better version: actionable hints. <em>"63% of learners drop off before lesson 4 — review pacing in that section."</em> Actionable, not algorithmic.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
 
 
@@ -608,7 +508,7 @@
 </main>
 
 <footer>
-  <p>Nastka Dąbrowska · Product Manager · <a href="https://www.linkedin.com/in/anastazja-dabrowska" target="_blank" style="color:var(--accent);text-decoration:none;">LinkedIn →</a></p>
+  <p>Nastka Dąbrowska · Product Manager · <a href="https://www.linkedin.com/in/anastazjadabrowska/" target="_blank" style="color:var(--accent);text-decoration:none;">LinkedIn →</a></p>
 </footer>
 
 </body>
