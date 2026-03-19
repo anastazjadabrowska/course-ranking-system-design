@@ -7,9 +7,9 @@
 
 ## Overview
 
-A self-contained product design case study: how should course ranking work on a multi-category learning platform?
+A product design case study for a foundational course ranking system — deliberately heuristic-based, designed to establish interpretable baseline ranking and identify where AI-driven approaches become necessary.
 
-The brief was open-ended — define the principles, identify the contributing factors, design the sorting and filtering UX. I treated it as a full product exercise: competitor research, algorithm design, key decision documentation, and an interactive prototype.
+The brief was open-ended: define the principles, identify the contributing factors, design the sorting and filtering UX. I treated it as a full product exercise: competitor research, algorithm design, key decision documentation, and an interactive prototype.
 
 **Completed independently in ~2 days.**
 
@@ -19,7 +19,7 @@ The brief was open-ended — define the principles, identify the contributing fa
 
 | | |
 |---|---|
-| 📄 [Product Design Document](https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-document.html) | Algorithm design, competitive audit, three key decisions explained |
+| 📄 [Product Design Document](https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-document.html) | Algorithm design, competitive audit, key decisions, and where AI takes over |
 | 🖥️ [Interactive Prototype](https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-prototype.html) | Lo-fi desktop UI — working filters, sort modes, quality labels |
 | 🎥 [Loom Walkthrough](https://www.loom.com/share/8b05401c1f384407957f323b0916bc0b) | ~2 min video walkthrough |
 
@@ -67,4 +67,18 @@ The roadmap includes a dashboard for course creators — but deliberately withou
 The better version: actionable hints. *"63% of learners drop off before lesson 4 — review pacing in that section."* Actionable, not algorithmic.
 
 ---
+
+## Where Heuristics Break — and Where AI Takes Over
+
+This system is intentionally built on heuristics. That is not a limitation — it is a design choice. Heuristics are interpretable, controllable, and easy to explain to users and regulators. But they have known failure modes, and identifying those failure modes is exactly how you define where a model-driven layer becomes necessary.
+
+| Heuristic signal | Where it breaks down | What AI replaces it with |
+|---|---|---|
+| Completion rate normalised for length | Still biased by difficulty, user intent, and format | Behavioural modelling: predicted completion given user profile and learning goal |
+| Static weights (40/25/20/10/5) | Optimal weights differ by category, user segment, and over time | Personalised ranking model trained on user-level signals |
+| Keyword search | Fails on synonyms, intent, cross-language queries | Semantic search using embeddings — matches meaning, not tokens |
+| Rating weighted by volume | Doesn't eliminate coordinated review inflation | Anomaly detection; LLM-assisted sentiment analysis |
+| Popularity + recency boost | Cold-start problem: new courses have no signals | Collaborative filtering based on similar user profiles |
+
+This heuristic layer is the right starting point — it produces explainable results, satisfies regulatory transparency requirements, and gives the team a stable baseline to measure against. The AI layer is where you go when you can measure that the heuristics are leaving value on the table.
 

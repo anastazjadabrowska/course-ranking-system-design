@@ -464,12 +464,13 @@
         <li><a href="#filters"><span class="toc-num">05</span> Filters</a></li>
         <li><a href="#decisions"><span class="toc-num">06</span> Three Decisions Worth Explaining</a></li>
         <li><a href="#roadmap"><span class="toc-num">07</span> What Comes Next</a></li>
-        <li><a href="#prototype"><span class="toc-num">08</span> A Note on the Prototype</a></li>
+        <li><a href="#heuristics"><span class="toc-num">08</span> Where Heuristics Break — and Where AI Takes Over</a></li>
+        <li><a href="#prototype"><span class="toc-num">09</span> A Note on the Prototype</a></li>
       </ol>
     </div>
 
     <h1>About This Project</h1>
-    <p>This document is a product design case study exploring how course ranking should work on a multi-category learning platform. The brief was open-ended: define the principles of course ranking, identify the contributing factors, and design the sorting and filtering logic for a course listing page.</p>
+    <p>This document is a product design case study for a foundational course ranking system — a deliberately heuristic-based layer designed to establish interpretable, controllable baseline ranking before introducing model-driven or personalised approaches. The brief was open-ended: define the principles of course ranking, identify the contributing factors, and design the sorting and filtering logic for a course listing page.</p>
     <p>The deliverables include this document, an interactive lo-fi prototype, and a short Loom walkthrough. The work was completed independently over approximately two days as a self-directed design exercise. All product decisions — including the algorithm weights, UX choices, and roadmap direction — are my own.</p>
   </section>
 
@@ -665,8 +666,48 @@
   </section>
 
   <!-- 8 -->
+  <section id="heuristics">
+    <h1>8. Where Heuristics Break — and Where AI Takes Over</h1>
+    <p>This system is intentionally built on heuristics. That is not a limitation — it is a design choice. Heuristics are interpretable, controllable, and easy to explain to users and regulators. But they have known failure modes, and identifying those failure modes is exactly how you define where a model-driven layer becomes necessary.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Heuristic signal</th><th>Where it breaks down</th><th>What AI replaces it with</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Completion rate normalised for length</strong></td>
+            <td>Still biased by difficulty, user intent, and format — a reference course is meant to be consulted, not finished</td>
+            <td>Behavioural modelling: predicted completion given user profile and learning goal</td>
+          </tr>
+          <tr>
+            <td><strong>Static weights (40/25/20/10/5)</strong></td>
+            <td>Optimal weights differ by category, user segment, and over time — a single global weight set is always a compromise</td>
+            <td>Personalised ranking model trained on user-level signals and adjusted per category</td>
+          </tr>
+          <tr>
+            <td><strong>Keyword search</strong></td>
+            <td>Fails on synonyms, intent, and cross-language queries — 'intro to ML' should surface the same results as 'beginner machine learning course'</td>
+            <td>Semantic search using embeddings — matches meaning, not just tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Rating weighted by volume</strong></td>
+            <td>Volume weighting reduces but does not eliminate rating inflation — coordinated review campaigns still distort scores</td>
+            <td>Anomaly detection on review patterns; LLM-assisted sentiment analysis across review text</td>
+          </tr>
+          <tr>
+            <td><strong>Popularity + recency boost</strong></td>
+            <td>Cold-start problem: new courses have no signals, so any boost is an assumption</td>
+            <td>Collaborative filtering: surface new courses to users with similar profiles to early adopters</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This heuristic layer is the right starting point — it produces explainable results, satisfies regulatory transparency requirements, and gives the team a stable baseline to measure against. The AI layer is where you go when you can measure that the heuristics are leaving value on the table.</p>
+  </section>
+
   <section id="prototype">
-    <h1>8. A Note on the Prototype</h1>
+    <h1>9. A Note on the Prototype</h1>
     <p>The prototype is designed for desktop browser — a deliberate call given that course discovery is a considered, multi-step task: users compare options, apply several filters, read descriptions, and often return to the list more than once. That pattern fits a wide screen much better than mobile. A mobile version would be a natural next step, with a bottom sheet for filters and a simplified card layout, but desktop is the right canvas for demonstrating ranking and sorting logic clearly.</p>
     <div class="callout">
       <p>→ <a href="https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-prototype.html" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:500;">Open the interactive prototype</a></p>
@@ -675,7 +716,7 @@
 
   <div class="doc-footer">
     <p>Nastka Dąbrowska — Course Ranking Algorithm · Product Design Case Study · March 2026</p>
-    <p><a href="https://www.linkedin.com/in/anastazja-dabrowska" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:500;">LinkedIn →</a></p>
+    <p><a href="https://www.linkedin.com/in/anastazjadabrowska/" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:500;">LinkedIn →</a></p>
   </div>
 
 </div>
