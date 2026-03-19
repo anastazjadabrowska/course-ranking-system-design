@@ -363,14 +363,12 @@
 
     .roadmap li {
       background: white;
-      padding: 1rem 1.2rem;
+      padding: 1rem 1.2rem 1rem 2.4rem;
       font-size: 0.9rem;
       color: var(--ink-mid);
       font-weight: 300;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
+      position: relative;
       max-width: 100%;
     }
 
@@ -380,7 +378,9 @@
       content: '→';
       color: var(--accent);
       font-family: var(--mono);
-      flex-shrink: 0;
+      position: absolute;
+      left: 1.2rem;
+      top: 1rem;
     }
 
     .roadmap li strong { color: var(--ink); font-weight: 500; }
