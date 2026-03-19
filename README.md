@@ -68,7 +68,3 @@ The better version: actionable hints. *"63% of learners drop off before lesson 4
 
 ---
 
-
-## Stack
-
-Prototype: vanilla HTML / CSS / JS · Document: Word (.docx) · Hosted: GitHub Pages
