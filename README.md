@@ -1,7 +1,7 @@
 # Course Ranking System — Product Design Case Study
 
 **Nastka Dąbrowska · Product Manager · March 2026**  
-[LinkedIn](https://www.linkedin.com/in/anastazjadabrowska/) · [Interactive Prototype →](https://anastazjadabrowska.github.io/course-ranking-system-design/)
+[LinkedIn](https://www.linkedin.com/in/anastazjadabrowska/) · [Interactive Prototype →](https://anastazjadabrowska.github.io/course-ranking-system-design/course-ranking-prototype.html)
 
 ---
 
