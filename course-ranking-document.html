@@ -561,7 +561,7 @@
           <tr>
             <td><strong>Completion Rate</strong></td>
             <td><span class="weight">25%</span></td>
-            <td>How many enrolled learners actually finish the course. The most honest signal of real-world quality — users vote with their time, not just their stars.</td>
+            <td>How many enrolled learners actually finish the course — normalised for course length, since a 2-hour course will naturally complete at a higher rate than a 40-hour one. Completion is compared against the expected baseline for courses of similar duration, making it a fairer signal of genuine quality.</td>
           </tr>
           <tr>
             <td><strong>Popularity Signal</strong></td>
@@ -627,7 +627,7 @@
 
   <!-- 6 -->
   <section id="decisions">
-    <h1>6. Three Decisions Worth Explaining</h1>
+    <h1>6. Four Decisions Worth Explaining</h1>
 
     <h3>6.1 Showing a quality label on the card</h3>
     <p>Every course card displays a quality label derived from the Ranking Score:</p>
@@ -644,12 +644,16 @@
 
     <h3>6.3 The active filter strip</h3>
     <p>This directly addresses the core failure from the competitor audit: Coursera applied filters silently, with no confirmation on screen. Active filter chips make state visible and reversible at all times.</p>
+
+    <h3>6.4 A trade-off worth naming: completion rate over raw rating</h3>
+    <p>An earlier version weighted User Rating at 50% and Completion Rate at 15%. I reversed the balance after thinking through incentives: rating is easy to solicit, completion is not. Prioritising completion at 25% means the algorithm rewards courses that actually deliver — at the cost of occasionally surfacing a course with a slightly lower star average that more people finish. That is a trade-off I am comfortable with.</p>
   </section>
 
   <!-- 7 -->
   <section id="roadmap">
     <h1>7. What Comes Next</h1>
     <ul class="roadmap">
+      <li><strong>Primary success metric:</strong> time-to-first-good-course — measured as time from search to starting a course the user does not abandon within the first 20 minutes. Secondary: first-course completion rate. Both are more meaningful than click-through rate, which optimises for attractive cards, not good outcomes.</li>
       <li><strong>Personalised weights:</strong> over time, adjust which signals matter more based on each user's own completion and rating history</li>
       <li><strong>A/B testing:</strong> the five weights are assumptions right now — they should be validated against real user behaviour and adjusted per category</li>
       <li><strong>Instructor response rate as a standalone filter:</strong> currently part of Community Activity, but worth surfacing directly</li>
